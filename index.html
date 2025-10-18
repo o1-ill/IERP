@@ -61,7 +61,7 @@
                 <div class="flex items-center space-x-4 space-x-reverse">
                     <div class="flex items-center">
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-800 to-amber-600 rounded-lg flex items-center justify-center ml-3">
-                            <i class="fas fa-cog text-white text-lg"></i>
+                            <span class="text-white text-sm font-bold">IERP</span>
                         </div>
                         <div class="mr-3">
                             <h1 class="text-xl font-bold text-blue-900">بوابة البحوث الهندسية</h1>
@@ -345,7 +345,7 @@
                     <div class="bg-gradient-to-br from-blue-50 to-amber-50 rounded-2xl p-8">
                         <div class="text-center">
                             <div class="w-24 h-24 bg-gradient-to-br from-blue-800 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-cog text-white text-3xl"></i>
+                                <span class="text-white text-2xl font-bold">IERP</span>
                             </div>
                             <h4 class="text-xl font-bold text-gray-900 mb-4">تواصل معنا</h4>
                             <div class="space-y-3 text-gray-700">
@@ -546,7 +546,7 @@
                 <div>
                     <div class="flex items-center mb-4">
                         <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-amber-500 rounded-lg flex items-center justify-center ml-3">
-                            <i class="fas fa-cog text-white"></i>
+                            <span class="text-white text-sm font-bold">IERP</span>
                         </div>
                         <div>
                             <h3 class="font-bold">بوابة البحوث الهندسية</h3>
@@ -673,11 +673,13 @@
         function loginUser(email, password) {
             return auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
-                    showMessage('login-error', 'تم تسجيل الدخول بنجاح!', false);
+                    console.log('تم تسجيل الدخول بنجاح:', userCredential.user);
                     document.getElementById('login-modal').classList.add('hidden');
+                    document.getElementById('login-form').reset();
                     return userCredential.user;
                 })
                 .catch((error) => {
+                    console.error('خطأ في تسجيل الدخول:', error);
                     let errorMessage = 'حدث خطأ في تسجيل الدخول';
                     if (error.code === 'auth/user-not-found') {
                         errorMessage = 'المستخدم غير موجود';
@@ -685,6 +687,8 @@
                         errorMessage = 'كلمة المرور غير صحيحة';
                     } else if (error.code === 'auth/invalid-email') {
                         errorMessage = 'البريد الإلكتروني غير صحيح';
+                    } else if (error.code === 'auth/invalid-credential') {
+                        errorMessage = 'بيانات الدخول غير صحيحة';
                     }
                     showMessage('login-error', errorMessage, true);
                     throw error;
@@ -692,14 +696,17 @@
         }
 
         function registerUser(email, password, userData) {
+            console.log('محاولة إنشاء حساب جديد:', email);
             return auth.createUserWithEmailAndPassword(email, password)
                 .then((userCredential) => {
+                    console.log('تم إنشاء الحساب بنجاح:', userCredential.user);
                     const user = userCredential.user;
                     
                     // Update user profile
                     return user.updateProfile({
                         displayName: userData.name
                     }).then(() => {
+                        console.log('تم تحديث الملف الشخصي');
                         // Save additional user data to database
                         return database.ref('users/' + user.uid).set({
                             name: userData.name,
@@ -709,17 +716,23 @@
                             createdAt: firebase.database.ServerValue.TIMESTAMP
                         });
                     }).then(() => {
-                        showMessage('register-error', 'تم إنشاء الحساب بنجاح!', false);
+                        console.log('تم حفظ بيانات المستخدم في قاعدة البيانات');
                         document.getElementById('register-modal').classList.add('hidden');
+                        document.getElementById('register-form').reset();
+                        // Show success message in a different element to avoid conflicts
+                        setTimeout(() => {
+                            alert('تم إنشاء الحساب بنجاح! يمكنك الآن تسجيل الدخول.');
+                        }, 500);
                         return user;
                     });
                 })
                 .catch((error) => {
+                    console.error('خطأ في إنشاء الحساب:', error);
                     let errorMessage = 'حدث خطأ في إنشاء الحساب';
                     if (error.code === 'auth/email-already-in-use') {
                         errorMessage = 'البريد الإلكتروني مستخدم بالفعل';
                     } else if (error.code === 'auth/weak-password') {
-                        errorMessage = 'كلمة المرور ضعيفة';
+                        errorMessage = 'كلمة المرور ضعيفة (يجب أن تكون 6 أحرف على الأقل)';
                     } else if (error.code === 'auth/invalid-email') {
                         errorMessage = 'البريد الإلكتروني غير صحيح';
                     }
@@ -736,17 +749,29 @@
 
         // Research functions
         function addResearch(researchData, file) {
+            console.log('محاولة إضافة بحث جديد:', researchData);
+            
             if (!currentUser) {
+                console.error('المستخدم غير مسجل الدخول');
                 showMessage('add-research-error', 'يجب تسجيل الدخول أولاً', true);
                 return Promise.reject('Not authenticated');
             }
 
+            console.log('المستخدم الحالي:', currentUser);
+            console.log('الملف المرفوع:', file);
+
             const researchId = database.ref().child('researches').push().key;
+            console.log('معرف البحث الجديد:', researchId);
+            
             const storageRef = storage.ref('researches/' + researchId + '.pdf');
             
+            console.log('بدء رفع الملف...');
             return storageRef.put(file).then((snapshot) => {
+                console.log('تم رفع الملف بنجاح:', snapshot);
                 return snapshot.ref.getDownloadURL();
             }).then((downloadURL) => {
+                console.log('رابط التحميل:', downloadURL);
+                
                 const research = {
                     id: researchId,
                     title: researchData.title,
@@ -765,15 +790,23 @@
                     ratings: {}
                 };
                 
+                console.log('بيانات البحث للحفظ:', research);
                 return database.ref('researches/' + researchId).set(research);
             }).then(() => {
+                console.log('تم حفظ البحث في قاعدة البيانات بنجاح');
                 showMessage('add-research-success', 'تم رفع البحث بنجاح!', false);
                 document.getElementById('add-research-modal').classList.add('hidden');
                 document.getElementById('add-research-form').reset();
-                loadResearches();
-                loadLatestResearches();
-                updateStats();
+                
+                // Refresh data
+                setTimeout(() => {
+                    loadResearches();
+                    loadLatestResearches();
+                    updateStats();
+                }, 1000);
+                
             }).catch((error) => {
+                console.error('خطأ في إضافة البحث:', error);
                 showMessage('add-research-error', 'حدث خطأ في رفع البحث: ' + error.message, true);
                 throw error;
             });
@@ -1019,46 +1052,102 @@
             // Login form
             document.getElementById('login-form').addEventListener('submit', (e) => {
                 e.preventDefault();
-                const email = document.getElementById('login-email').value;
+                console.log('تم إرسال نموذج تسجيل الدخول');
+                
+                const email = document.getElementById('login-email').value.trim();
                 const password = document.getElementById('login-password').value;
-                loginUser(email, password);
+                
+                if (!email || !password) {
+                    showMessage('login-error', 'يرجى ملء جميع الحقول', true);
+                    return;
+                }
+                
+                console.log('محاولة تسجيل الدخول بالبريد:', email);
+                loginUser(email, password).catch(error => {
+                    console.error('فشل تسجيل الدخول:', error);
+                });
             });
 
             // Register form
             document.getElementById('register-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+                console.log('تم إرسال نموذج التسجيل');
+                
                 const userData = {
-                    name: document.getElementById('register-name').value,
-                    email: document.getElementById('register-email').value,
+                    name: document.getElementById('register-name').value.trim(),
+                    email: document.getElementById('register-email').value.trim(),
                     university: document.getElementById('register-university').value,
                     department: document.getElementById('register-department').value
                 };
                 const password = document.getElementById('register-password').value;
-                registerUser(userData.email, password, userData);
+                
+                // Validation
+                if (!userData.name || !userData.email || !userData.university || !userData.department || !password) {
+                    showMessage('register-error', 'يرجى ملء جميع الحقول', true);
+                    return;
+                }
+                
+                if (password.length < 6) {
+                    showMessage('register-error', 'كلمة المرور يجب أن تكون 6 أحرف على الأقل', true);
+                    return;
+                }
+                
+                console.log('بيانات التسجيل:', userData);
+                registerUser(userData.email, password, userData).catch(error => {
+                    console.error('فشل التسجيل:', error);
+                });
             });
 
             // Add research form
             document.getElementById('add-research-form').addEventListener('submit', (e) => {
                 e.preventDefault();
+                console.log('تم إرسال نموذج إضافة البحث');
+                
+                if (!currentUser) {
+                    showMessage('add-research-error', 'يجب تسجيل الدخول أولاً', true);
+                    return;
+                }
+                
+                const researchData = {
+                    title: document.getElementById('research-title').value.trim(),
+                    department: document.getElementById('research-department').value,
+                    type: document.getElementById('research-type').value,
+                    abstract: document.getElementById('research-abstract').value.trim(),
+                    keywords: document.getElementById('research-keywords').value.trim()
+                };
+                
+                const file = document.getElementById('research-file').files[0];
+                
+                // Validation
+                if (!researchData.title || !researchData.department || !researchData.type || !researchData.abstract) {
+                    showMessage('add-research-error', 'يرجى ملء جميع الحقول المطلوبة', true);
+                    return;
+                }
+                
+                if (!file) {
+                    showMessage('add-research-error', 'يرجى اختيار ملف PDF', true);
+                    return;
+                }
+                
+                if (file.type !== 'application/pdf') {
+                    showMessage('add-research-error', 'يرجى اختيار ملف PDF صحيح فقط', true);
+                    return;
+                }
+                
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    showMessage('add-research-error', 'حجم الملف كبير جداً (الحد الأقصى 10 ميجابايت)', true);
+                    return;
+                }
+                
                 // Get user data for university field
                 database.ref('users/' + currentUser.uid).once('value', (userSnapshot) => {
                     const userData = userSnapshot.val();
-                    const researchData = {
-                        title: document.getElementById('research-title').value,
-                        department: document.getElementById('research-department').value,
-                        type: document.getElementById('research-type').value,
-                        abstract: document.getElementById('research-abstract').value,
-                        keywords: document.getElementById('research-keywords').value,
-                        university: userData ? userData.university : 'غير محدد'
-                    };
+                    researchData.university = userData ? userData.university : 'غير محدد';
                     
-                    const file = document.getElementById('research-file').files[0];
-                    
-                    if (file && file.type === 'application/pdf') {
-                        addResearch(researchData, file);
-                    } else {
-                        showMessage('add-research-error', 'يرجى اختيار ملف PDF صحيح', true);
-                    }
+                    console.log('بيانات البحث النهائية:', researchData);
+                    addResearch(researchData, file).catch(error => {
+                        console.error('فشل إضافة البحث:', error);
+                    });
                 });
             });
         }
@@ -1409,5 +1498,5 @@
             });
         }
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9908d50355bac530',t:'MTc2MDc5ODg1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9908e47bd316d0d2',t:'MTc2MDc5OTQ5Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
