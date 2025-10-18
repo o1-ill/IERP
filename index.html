@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة البحوث الهندسية العراقية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap');
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #d97706 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stats-counter {
+            animation: countUp 2s ease-out;
+        }
+        
+        @keyframes countUp {
+            from { opacity: 0; transform: scale(0.5); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .iraq-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f59e0b' fill-opacity='0.05'%3E%3Cpath d='M30 30c0-11.046-8.954-20-20-20s-20 8.954-20 20 8.954 20 20 20 20-8.954 20-20zm0 0c0 11.046 8.954 20 20 20s20-8.954 20-20-8.954-20-20-20-20 8.954-20 20z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="h-full bg-gray-50 iraq-pattern">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div class="flex items-center">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-800 to-amber-600 rounded-lg flex items-center justify-center ml-3">
+                            <i class="fas fa-cog text-white text-lg"></i>
+                        </div>
+                        <div class="mr-3">
+                            <h1 class="text-xl font-bold text-blue-900">بوابة البحوث الهندسية</h1>
+                            <p class="text-xs text-gray-600">Iraqi Engineering Research Portal</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-8 space-x-reverse">
+                    <a href="#home" class="nav-link text-blue-900 hover:text-amber-600 font-medium transition-colors">الرئيسية</a>
+                    <a href="#researches" class="nav-link text-gray-700 hover:text-blue-900 font-medium transition-colors">البحوث</a>
+                    <a href="#universities" class="nav-link text-gray-700 hover:text-blue-900 font-medium transition-colors">الجامعات</a>
+                    <a href="#researchers" class="nav-link text-gray-700 hover:text-blue-900 font-medium transition-colors">الباحثون</a>
+                    <a href="#about" class="nav-link text-gray-700 hover:text-blue-900 font-medium transition-colors">حول</a>
+                </div>
+                
+                <div class="flex items-center space-x-4 space-x-reverse">
+                    <div id="auth-buttons" class="flex items-center space-x-2 space-x-reverse">
+                        <button id="login-btn" class="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-800 transition-colors">
+                            <i class="fas fa-sign-in-alt ml-2"></i>
+                            تسجيل الدخول
+                        </button>
+                        <button id="register-btn" class="bg-amber-600 text-white px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors">
+                            <i class="fas fa-user-plus ml-2"></i>
+                            تسجيل جديد
+                        </button>
+                    </div>
+                    <div id="user-menu" class="hidden flex items-center space-x-2 space-x-reverse">
+                        <span id="user-name" class="text-gray-700 font-medium"></span>
+                        <button id="add-research-btn" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                            <i class="fas fa-plus ml-2"></i>
+                            إضافة بحث
+                        </button>
+                        <button id="logout-btn" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors">
+                            <i class="fas fa-sign-out-alt ml-2"></i>
+                            خروج
+                        </button>
+                    </div>
+                    <button class="md:hidden text-gray-700" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden bg-white border-t hidden">
+            <div class="px-4 py-2 space-y-2">
+                <a href="#home" class="block py-2 text-blue-900 font-medium">الرئيسية</a>
+                <a href="#researches" class="block py-2 text-gray-700">البحوث</a>
+                <a href="#universities" class="block py-2 text-gray-700">الجامعات</a>
+                <a href="#researchers" class="block py-2 text-gray-700">الباحثون</a>
+                <a href="#about" class="block py-2 text-gray-700">حول</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- Home Section -->
+        <section id="home" class="section-content">
+            <!-- Hero Section -->
+            <div class="gradient-bg text-white py-20">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <div class="animate-fade-in">
+                        <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                            بوابة البحوث الهندسية العراقية
+                        </h1>
+                        <p class="text-xl md:text-2xl mb-8 opacity-90">
+                            منصة وطنية شاملة لجميع البحوث الهندسية في العراق
+                        </p>
+                        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                            <button class="bg-white text-blue-900 px-8 py-3 rounded-lg font-bold hover:bg-gray-100 transition-colors">
+                                <i class="fas fa-search ml-2"></i>
+                                استكشف البحوث
+                            </button>
+                            <button class="bg-amber-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-amber-700 transition-colors">
+                                <i class="fas fa-plus ml-2"></i>
+                                أضف بحثك
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="max-w-4xl mx-auto px-4 -mt-8 relative z-10">
+                <div class="bg-white rounded-xl shadow-xl p-6">
+                    <div class="flex flex-col md:flex-row gap-4">
+                        <div class="flex-1">
+                            <input type="text" id="search-input" placeholder="ابحث في البحوث الهندسية..." 
+                                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+                        <select class="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            <option>جميع التخصصات</option>
+                            <option>الهندسة المدنية</option>
+                            <option>الهندسة الميكانيكية</option>
+                            <option>الهندسة الكهربائية</option>
+                            <option>هندسة الحاسوب</option>
+                            <option>هندسة الاتصالات</option>
+                        </select>
+                        <button class="bg-blue-900 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition-colors">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                    <div class="text-center stats-counter">
+                        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-file-alt text-blue-900 text-2xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-blue-900 mb-2" id="research-count">2,847</h3>
+                            <p class="text-gray-600">بحث هندسي</p>
+                        </div>
+                    </div>
+                    <div class="text-center stats-counter">
+                        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-university text-amber-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-amber-600 mb-2" id="university-count">45</h3>
+                            <p class="text-gray-600">جامعة عراقية</p>
+                        </div>
+                    </div>
+                    <div class="text-center stats-counter">
+                        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-users text-green-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-green-600 mb-2" id="researcher-count">12,456</h3>
+                            <p class="text-gray-600">باحث وطالب</p>
+                        </div>
+                    </div>
+                    <div class="text-center stats-counter">
+                        <div class="bg-white rounded-xl shadow-lg p-6 card-hover">
+                            <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-download text-purple-600 text-2xl"></i>
+                            </div>
+                            <h3 class="text-3xl font-bold text-purple-600 mb-2" id="download-count">89,234</h3>
+                            <p class="text-gray-600">تحميل</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Latest Researches -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">أحدث البحوث المنشورة</h2>
+                    <p class="text-gray-600">اكتشف أحدث الإنجازات العلمية في الهندسة العراقية</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="latest-researches">
+                    <!-- Research cards will be populated by JavaScript -->
+                </div>
+                
+                <div class="text-center mt-12">
+                    <button class="bg-blue-900 text-white px-8 py-3 rounded-lg hover:bg-blue-800 transition-colors">
+                        عرض جميع البحوث
+                        <i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Researches Section -->
+        <section id="researches" class="section-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">البحوث الهندسية</h2>
+                    <p class="text-gray-600">مكتبة شاملة للبحوث الهندسية العراقية</p>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option>جميع الجامعات</option>
+                            <option>جامعة بغداد</option>
+                            <option>الجامعة التكنولوجية</option>
+                            <option>جامعة البصرة</option>
+                        </select>
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option>جميع التخصصات</option>
+                            <option>الهندسة المدنية</option>
+                            <option>الهندسة الميكانيكية</option>
+                            <option>الهندسة الكهربائية</option>
+                        </select>
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option>جميع السنوات</option>
+                            <option>2024</option>
+                            <option>2023</option>
+                            <option>2022</option>
+                        </select>
+                        <select class="px-4 py-2 border border-gray-300 rounded-lg">
+                            <option>جميع الأنواع</option>
+                            <option>مشروع تخرج</option>
+                            <option>ماجستير</option>
+                            <option>دكتوراه</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Research Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="research-grid">
+                    <!-- Research cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Universities Section -->
+        <section id="universities" class="section-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">الجامعات العراقية</h2>
+                    <p class="text-gray-600">شبكة الجامعات المساهمة في البحث العلمي</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="universities-grid">
+                    <!-- University cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Researchers Section -->
+        <section id="researchers" class="section-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">الباحثون والأكاديميون</h2>
+                    <p class="text-gray-600">نخبة من الباحثين والأكاديميين العراقيين</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8" id="researchers-grid">
+                    <!-- Researcher cards will be populated by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section-content hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-gray-900 mb-4">حول المشروع</h2>
+                    <p class="text-gray-600">رؤيتنا ورسالتنا في خدمة البحث العلمي العراقي</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">رؤيتنا</h3>
+                        <p class="text-gray-700 mb-6 leading-relaxed">
+                            نسعى لتكون بوابة البحوث الهندسية العراقية المنصة الرائدة والمرجع الأول للبحث العلمي الهندسي في العراق، 
+                            حيث نجمع كافة الجهود البحثية تحت مظلة واحدة لخدمة التطوير والابتكار في القطاع الهندسي.
+                        </p>
+                        
+                        <h3 class="text-2xl font-bold text-gray-900 mb-6">أهدافنا</h3>
+                        <ul class="space-y-3 text-gray-700">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                توفير منصة موحدة لجميع البحوث الهندسية العراقية
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                تسهيل الوصول للمعرفة العلمية للباحثين والطلبة
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                تعزيز التعاون البحثي بين الجامعات العراقية
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-green-500 mt-1 ml-3"></i>
+                                دعم الابتكار والتطوير في القطاع الهندسي
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-blue-50 to-amber-50 rounded-2xl p-8">
+                        <div class="text-center">
+                            <div class="w-24 h-24 bg-gradient-to-br from-blue-800 to-amber-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-cog text-white text-3xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold text-gray-900 mb-4">تواصل معنا</h4>
+                            <div class="space-y-3 text-gray-700">
+                                <p><i class="fas fa-envelope ml-2 text-blue-600"></i> info@iraqengresearch.edu.iq</p>
+                                <p><i class="fas fa-phone ml-2 text-blue-600"></i> +964 1 234 5678</p>
+                                <p><i class="fas fa-map-marker-alt ml-2 text-blue-600"></i> بغداد، العراق</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">تسجيل الدخول</h2>
+                <button id="close-login-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label for="login-email" class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                    <input type="email" id="login-email" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                
+                <div>
+                    <label for="login-password" class="block text-sm font-medium text-gray-700 mb-2">كلمة المرور</label>
+                    <input type="password" id="login-password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل كلمة المرور">
+                </div>
+                
+                <div id="login-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                
+                <button type="submit" class="w-full bg-blue-900 text-white py-3 rounded-lg hover:bg-blue-800 transition-colors">
+                    <i class="fas fa-sign-in-alt ml-2"></i>
+                    تسجيل الدخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div id="register-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">تسجيل جديد</h2>
+                <button id="close-register-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="register-form" class="space-y-4">
+                <div>
+                    <label for="register-name" class="block text-sm font-medium text-gray-700 mb-2">الاسم الكامل</label>
+                    <input type="text" id="register-name" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل اسمك الكامل">
+                </div>
+                
+                <div>
+                    <label for="register-email" class="block text-sm font-medium text-gray-700 mb-2">البريد الإلكتروني</label>
+                    <input type="email" id="register-email" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل بريدك الإلكتروني">
+                </div>
+                
+                <div>
+                    <label for="register-university" class="block text-sm font-medium text-gray-700 mb-2">الجامعة</label>
+                    <select id="register-university" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">اختر الجامعة</option>
+                        <option value="جامعة بغداد">جامعة بغداد</option>
+                        <option value="الجامعة التكنولوجية">الجامعة التكنولوجية</option>
+                        <option value="جامعة البصرة">جامعة البصرة</option>
+                        <option value="جامعة الموصل">جامعة الموصل</option>
+                        <option value="جامعة النهرين">جامعة النهرين</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="register-department" class="block text-sm font-medium text-gray-700 mb-2">القسم</label>
+                    <select id="register-department" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">اختر القسم</option>
+                        <option value="الهندسة المدنية">الهندسة المدنية</option>
+                        <option value="الهندسة الميكانيكية">الهندسة الميكانيكية</option>
+                        <option value="الهندسة الكهربائية">الهندسة الكهربائية</option>
+                        <option value="هندسة الحاسوب">هندسة الحاسوب</option>
+                        <option value="هندسة الاتصالات">هندسة الاتصالات</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="register-password" class="block text-sm font-medium text-gray-700 mb-2">كلمة المرور</label>
+                    <input type="password" id="register-password" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل كلمة المرور">
+                </div>
+                
+                <div id="register-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                
+                <button type="submit" class="w-full bg-amber-600 text-white py-3 rounded-lg hover:bg-amber-700 transition-colors">
+                    <i class="fas fa-user-plus ml-2"></i>
+                    إنشاء حساب
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Research Modal -->
+    <div id="add-research-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900">إضافة بحث جديد</h2>
+                <button id="close-add-research-modal" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="add-research-form" class="space-y-4">
+                <div>
+                    <label for="research-title" class="block text-sm font-medium text-gray-700 mb-2">عنوان البحث</label>
+                    <input type="text" id="research-title" required 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل عنوان البحث">
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="research-department" class="block text-sm font-medium text-gray-700 mb-2">التخصص</label>
+                        <select id="research-department" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">اختر التخصص</option>
+                            <option value="الهندسة المدنية">الهندسة المدنية</option>
+                            <option value="الهندسة الميكانيكية">الهندسة الميكانيكية</option>
+                            <option value="الهندسة الكهربائية">الهندسة الكهربائية</option>
+                            <option value="هندسة الحاسوب">هندسة الحاسوب</option>
+                            <option value="هندسة الاتصالات">هندسة الاتصالات</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="research-type" class="block text-sm font-medium text-gray-700 mb-2">نوع البحث</label>
+                        <select id="research-type" required 
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">اختر نوع البحث</option>
+                            <option value="مشروع تخرج">مشروع تخرج</option>
+                            <option value="ماجستير">ماجستير</option>
+                            <option value="دكتوراه">دكتوراه</option>
+                            <option value="بحث علمي">بحث علمي</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="research-abstract" class="block text-sm font-medium text-gray-700 mb-2">ملخص البحث</label>
+                    <textarea id="research-abstract" required rows="4"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="أدخل ملخص البحث"></textarea>
+                </div>
+                
+                <div>
+                    <label for="research-keywords" class="block text-sm font-medium text-gray-700 mb-2">الكلمات المفتاحية</label>
+                    <input type="text" id="research-keywords" 
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="أدخل الكلمات المفتاحية مفصولة بفواصل">
+                </div>
+                
+                <div>
+                    <label for="research-file" class="block text-sm font-medium text-gray-700 mb-2">ملف البحث (PDF)</label>
+                    <input type="file" id="research-file" accept=".pdf" required
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                
+                <div id="add-research-error" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"></div>
+                <div id="add-research-success" class="hidden bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded"></div>
+                
+                <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition-colors">
+                    <i class="fas fa-upload ml-2"></i>
+                    رفع البحث
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center mb-4">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-amber-500 rounded-lg flex items-center justify-center ml-3">
+                            <i class="fas fa-cog text-white"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">بوابة البحوث الهندسية</h3>
+                            <p class="text-sm text-gray-400">Iraqi Engineering Research</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm">
+                        منصة وطنية شاملة لجميع البحوث الهندسية في العراق
+                    </p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">روابط سريعة</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition-colors">الرئيسية</a></li>
+                        <li><a href="#researches" class="hover:text-white transition-colors">البحوث</a></li>
+                        <li><a href="#universities" class="hover:text-white transition-colors">الجامعات</a></li>
+                        <li><a href="#researchers" class="hover:text-white transition-colors">الباحثون</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">الخدمات</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="#" class="hover:text-white transition-colors">رفع البحوث</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">البحث المتقدم</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">التقييم والمراجعة</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors">الإحصائيات</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">تابعنا</h4>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <a href="#" class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center hover:bg-blue-500 transition-colors">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-blue-800 rounded-full flex items-center justify-center hover:bg-blue-900 transition-colors">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
+                <p>&copy; 2024 بوابة البحوث الهندسية العراقية. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCjgOJBR5GPhoBQww7HTda8AFnbKDF0Q5c",
+            authDomain: "ierp-c4b65.firebaseapp.com",
+            databaseURL: "https://ierp-c4b65-default-rtdb.firebaseio.com",
+            projectId: "ierp-c4b65",
+            storageBucket: "ierp-c4b65.firebasestorage.app",
+            messagingSenderId: "350683020717",
+            appId: "1:350683020717:web:e1f1eb6da290c47323b524",
+            measurementId: "G-0JNBVZBTQ4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const database = firebase.database();
+        const storage = firebase.storage();
+
+        // Global variables
+        let currentUser = null;
+        let allResearches = [];
+        let allUniversities = [];
+        let allResearchers = [];
+
+        // Authentication functions
+        function showMessage(elementId, message, isError = false) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = isError ? 
+                'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded' :
+                'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded';
+            element.classList.remove('hidden');
+            
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 5000);
+        }
+
+        function updateAuthUI(user) {
+            const authButtons = document.getElementById('auth-buttons');
+            const userMenu = document.getElementById('user-menu');
+            const userName = document.getElementById('user-name');
+            
+            if (user) {
+                authButtons.classList.add('hidden');
+                userMenu.classList.remove('hidden');
+                userName.textContent = user.displayName || user.email;
+                currentUser = user;
+            } else {
+                authButtons.classList.remove('hidden');
+                userMenu.classList.add('hidden');
+                currentUser = null;
+            }
+        }
+
+        // Firebase Authentication
+        auth.onAuthStateChanged(function(user) {
+            updateAuthUI(user);
+            if (user) {
+                loadUserData();
+            }
+        });
+
+        function loginUser(email, password) {
+            return auth.signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    showMessage('login-error', 'تم تسجيل الدخول بنجاح!', false);
+                    document.getElementById('login-modal').classList.add('hidden');
+                    return userCredential.user;
+                })
+                .catch((error) => {
+                    let errorMessage = 'حدث خطأ في تسجيل الدخول';
+                    if (error.code === 'auth/user-not-found') {
+                        errorMessage = 'المستخدم غير موجود';
+                    } else if (error.code === 'auth/wrong-password') {
+                        errorMessage = 'كلمة المرور غير صحيحة';
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'البريد الإلكتروني غير صحيح';
+                    }
+                    showMessage('login-error', errorMessage, true);
+                    throw error;
+                });
+        }
+
+        function registerUser(email, password, userData) {
+            return auth.createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Update user profile
+                    return user.updateProfile({
+                        displayName: userData.name
+                    }).then(() => {
+                        // Save additional user data to database
+                        return database.ref('users/' + user.uid).set({
+                            name: userData.name,
+                            email: userData.email,
+                            university: userData.university,
+                            department: userData.department,
+                            createdAt: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    }).then(() => {
+                        showMessage('register-error', 'تم إنشاء الحساب بنجاح!', false);
+                        document.getElementById('register-modal').classList.add('hidden');
+                        return user;
+                    });
+                })
+                .catch((error) => {
+                    let errorMessage = 'حدث خطأ في إنشاء الحساب';
+                    if (error.code === 'auth/email-already-in-use') {
+                        errorMessage = 'البريد الإلكتروني مستخدم بالفعل';
+                    } else if (error.code === 'auth/weak-password') {
+                        errorMessage = 'كلمة المرور ضعيفة';
+                    } else if (error.code === 'auth/invalid-email') {
+                        errorMessage = 'البريد الإلكتروني غير صحيح';
+                    }
+                    showMessage('register-error', errorMessage, true);
+                    throw error;
+                });
+        }
+
+        function logoutUser() {
+            return auth.signOut().then(() => {
+                showMessage('login-error', 'تم تسجيل الخروج بنجاح!', false);
+            });
+        }
+
+        // Research functions
+        function addResearch(researchData, file) {
+            if (!currentUser) {
+                showMessage('add-research-error', 'يجب تسجيل الدخول أولاً', true);
+                return Promise.reject('Not authenticated');
+            }
+
+            const researchId = database.ref().child('researches').push().key;
+            const storageRef = storage.ref('researches/' + researchId + '.pdf');
+            
+            return storageRef.put(file).then((snapshot) => {
+                return snapshot.ref.getDownloadURL();
+            }).then((downloadURL) => {
+                const research = {
+                    id: researchId,
+                    title: researchData.title,
+                    author: currentUser.displayName || currentUser.email,
+                    authorId: currentUser.uid,
+                    university: researchData.university || 'غير محدد',
+                    department: researchData.department,
+                    type: researchData.type,
+                    abstract: researchData.abstract,
+                    keywords: researchData.keywords,
+                    fileUrl: downloadURL,
+                    year: new Date().getFullYear(),
+                    createdAt: firebase.database.ServerValue.TIMESTAMP,
+                    downloads: 0,
+                    rating: 0,
+                    ratings: {}
+                };
+                
+                return database.ref('researches/' + researchId).set(research);
+            }).then(() => {
+                showMessage('add-research-success', 'تم رفع البحث بنجاح!', false);
+                document.getElementById('add-research-modal').classList.add('hidden');
+                document.getElementById('add-research-form').reset();
+                loadResearches();
+                loadLatestResearches();
+                updateStats();
+            }).catch((error) => {
+                showMessage('add-research-error', 'حدث خطأ في رفع البحث: ' + error.message, true);
+                throw error;
+            });
+        }
+
+        function loadResearches() {
+            database.ref('researches').orderByChild('createdAt').once('value', (snapshot) => {
+                allResearches = [];
+                snapshot.forEach((childSnapshot) => {
+                    allResearches.unshift(childSnapshot.val());
+                });
+                displayResearches(allResearches);
+            });
+        }
+
+        function loadLatestResearches() {
+            database.ref('researches').orderByChild('createdAt').limitToLast(3).once('value', (snapshot) => {
+                const latestResearches = [];
+                snapshot.forEach((childSnapshot) => {
+                    latestResearches.unshift(childSnapshot.val());
+                });
+                displayLatestResearches(latestResearches);
+            });
+        }
+
+        function loadUniversities() {
+            // Load universities from database or use default list
+            database.ref('universities').once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    allUniversities = [];
+                    snapshot.forEach((childSnapshot) => {
+                        allUniversities.push(childSnapshot.val());
+                    });
+                } else {
+                    // Initialize with default universities
+                    initializeDefaultUniversities();
+                }
+                displayUniversities(allUniversities);
+            });
+        }
+
+        function loadResearchers() {
+            database.ref('users').once('value', (snapshot) => {
+                allResearchers = [];
+                snapshot.forEach((childSnapshot) => {
+                    const user = childSnapshot.val();
+                    // Count user's researches
+                    database.ref('researches').orderByChild('authorId').equalTo(childSnapshot.key).once('value', (researchSnapshot) => {
+                        user.researchCount = researchSnapshot.numChildren();
+                        allResearchers.push(user);
+                        if (allResearchers.length === snapshot.numChildren()) {
+                            displayResearchers(allResearchers);
+                        }
+                    });
+                });
+            });
+        }
+
+        function loadUserData() {
+            if (currentUser) {
+                database.ref('users/' + currentUser.uid).once('value', (snapshot) => {
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        // Update form defaults with user data
+                        document.getElementById('research-department').value = userData.department || '';
+                    }
+                });
+            }
+        }
+
+        function updateStats() {
+            // Update research count
+            database.ref('researches').once('value', (snapshot) => {
+                document.getElementById('research-count').textContent = snapshot.numChildren().toLocaleString();
+            });
+            
+            // Update user count
+            database.ref('users').once('value', (snapshot) => {
+                document.getElementById('researcher-count').textContent = snapshot.numChildren().toLocaleString();
+            });
+            
+            // Update download count (sum of all research downloads)
+            database.ref('researches').once('value', (snapshot) => {
+                let totalDownloads = 0;
+                snapshot.forEach((childSnapshot) => {
+                    const research = childSnapshot.val();
+                    totalDownloads += research.downloads || 0;
+                });
+                document.getElementById('download-count').textContent = totalDownloads.toLocaleString();
+            });
+        }
+
+        function initializeDefaultUniversities() {
+            const defaultUniversities = [
+                {
+                    id: 'baghdad-uni',
+                    name: 'جامعة بغداد',
+                    nameEn: 'University of Baghdad',
+                    city: 'بغداد',
+                    established: 1957,
+                    departments: ['الهندسة المدنية', 'الهندسة الميكانيكية', 'الهندسة الكهربائية', 'هندسة الحاسوب'],
+                    website: 'https://uobaghdad.edu.iq'
+                },
+                {
+                    id: 'tech-uni',
+                    name: 'الجامعة التكنولوجية',
+                    nameEn: 'University of Technology',
+                    city: 'بغداد',
+                    established: 1975,
+                    departments: ['الهندسة الميكانيكية', 'هندسة الحاسوب', 'الهندسة الكيميائية', 'هندسة المواد'],
+                    website: 'https://uotechnology.edu.iq'
+                },
+                {
+                    id: 'basrah-uni',
+                    name: 'جامعة البصرة',
+                    nameEn: 'University of Basrah',
+                    city: 'البصرة',
+                    established: 1967,
+                    departments: ['الهندسة المدنية', 'هندسة البترول', 'الهندسة الكهربائية', 'هندسة الاتصالات'],
+                    website: 'https://uobasrah.edu.iq'
+                }
+            ];
+            
+            defaultUniversities.forEach(uni => {
+                database.ref('universities/' + uni.id).set(uni);
+            });
+            allUniversities = defaultUniversities;
+        }
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Navigation links
+            const navLinks = document.querySelectorAll('.nav-link, a[href^="#"]');
+            const sections = document.querySelectorAll('.section-content');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    
+                    // Hide all sections
+                    sections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    
+                    // Show target section
+                    const targetSection = document.getElementById(targetId);
+                    if (targetSection) {
+                        targetSection.classList.remove('hidden');
+                    }
+                    
+                    // Update active nav link
+                    navLinks.forEach(navLink => {
+                        navLink.classList.remove('text-blue-900');
+                        navLink.classList.add('text-gray-700');
+                    });
+                    this.classList.remove('text-gray-700');
+                    this.classList.add('text-blue-900');
+                    
+                    // Hide mobile menu
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch(this.value);
+                }
+            });
+
+            // Modal functionality
+            setupModals();
+            
+            // Form submissions
+            setupForms();
+
+            // Initialize stats
+            initializeStats();
+            
+            // Setup filters
+            setupFilters();
+            
+            // Load initial data
+            loadLatestResearches();
+            loadResearches();
+            loadUniversities();
+            loadResearchers();
+            updateStats();
+        });
+
+        function setupModals() {
+            // Login modal
+            document.getElementById('login-btn').addEventListener('click', () => {
+                document.getElementById('login-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('close-login-modal').addEventListener('click', () => {
+                document.getElementById('login-modal').classList.add('hidden');
+            });
+
+            // Register modal
+            document.getElementById('register-btn').addEventListener('click', () => {
+                document.getElementById('register-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('close-register-modal').addEventListener('click', () => {
+                document.getElementById('register-modal').classList.add('hidden');
+            });
+
+            // Add research modal
+            document.getElementById('add-research-btn').addEventListener('click', () => {
+                document.getElementById('add-research-modal').classList.remove('hidden');
+            });
+            
+            document.getElementById('close-add-research-modal').addEventListener('click', () => {
+                document.getElementById('add-research-modal').classList.add('hidden');
+            });
+
+            // Logout
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                logoutUser();
+            });
+
+            // Close modals when clicking outside
+            document.addEventListener('click', (e) => {
+                if (e.target.classList.contains('fixed') && e.target.classList.contains('inset-0')) {
+                    e.target.classList.add('hidden');
+                }
+            });
+        }
+
+        function setupForms() {
+            // Login form
+            document.getElementById('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+                loginUser(email, password);
+            });
+
+            // Register form
+            document.getElementById('register-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userData = {
+                    name: document.getElementById('register-name').value,
+                    email: document.getElementById('register-email').value,
+                    university: document.getElementById('register-university').value,
+                    department: document.getElementById('register-department').value
+                };
+                const password = document.getElementById('register-password').value;
+                registerUser(userData.email, password, userData);
+            });
+
+            // Add research form
+            document.getElementById('add-research-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Get user data for university field
+                database.ref('users/' + currentUser.uid).once('value', (userSnapshot) => {
+                    const userData = userSnapshot.val();
+                    const researchData = {
+                        title: document.getElementById('research-title').value,
+                        department: document.getElementById('research-department').value,
+                        type: document.getElementById('research-type').value,
+                        abstract: document.getElementById('research-abstract').value,
+                        keywords: document.getElementById('research-keywords').value,
+                        university: userData ? userData.university : 'غير محدد'
+                    };
+                    
+                    const file = document.getElementById('research-file').files[0];
+                    
+                    if (file && file.type === 'application/pdf') {
+                        addResearch(researchData, file);
+                    } else {
+                        showMessage('add-research-error', 'يرجى اختيار ملف PDF صحيح', true);
+                    }
+                });
+            });
+        }
+
+        function displayLatestResearches(researches) {
+            const container = document.getElementById('latest-researches');
+            container.innerHTML = '';
+            
+            if (researches.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-file-alt text-gray-400 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-600 mb-2">لا توجد بحوث حالياً</h3>
+                        <p class="text-gray-500">كن أول من يضيف بحثاً إلى المنصة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            researches.forEach(research => {
+                const card = createResearchCard(research);
+                container.appendChild(card);
+            });
+        }
+
+        function displayResearches(researches) {
+            const container = document.getElementById('research-grid');
+            container.innerHTML = '';
+            
+            if (researches.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-search text-gray-400 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-600 mb-2">لم يتم العثور على بحوث</h3>
+                        <p class="text-gray-500">جرب البحث بكلمات مختلفة أو أضف بحثاً جديداً</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            researches.forEach(research => {
+                const card = createResearchCard(research);
+                container.appendChild(card);
+            });
+        }
+
+        function displayUniversities(universities) {
+            const container = document.getElementById('universities-grid');
+            container.innerHTML = '';
+            
+            universities.forEach(university => {
+                // Count researches for this university
+                database.ref('researches').orderByChild('university').equalTo(university.name).once('value', (snapshot) => {
+                    university.researchCount = snapshot.numChildren();
+                    const card = createUniversityCard(university);
+                    container.appendChild(card);
+                });
+            });
+        }
+
+        function displayResearchers(researchers) {
+            const container = document.getElementById('researchers-grid');
+            container.innerHTML = '';
+            
+            if (researchers.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-users text-gray-400 text-4xl mb-4"></i>
+                        <h3 class="text-xl font-medium text-gray-600 mb-2">لا يوجد باحثون مسجلون</h3>
+                        <p class="text-gray-500">كن أول من ينضم إلى المنصة</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            researchers.forEach(researcher => {
+                const card = createResearcherCard(researcher);
+                container.appendChild(card);
+            });
+        }
+
+        function createResearchCard(research) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg p-6 card-hover animate-fade-in';
+            
+            const rating = research.rating || 0;
+            const downloads = research.downloads || 0;
+            
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">${research.department || 'غير محدد'}</span>
+                    <div class="flex items-center text-amber-500">
+                        <i class="fas fa-star text-sm"></i>
+                        <span class="text-sm text-gray-600 mr-1">${rating.toFixed(1)}</span>
+                    </div>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-3 line-clamp-2">${research.title}</h3>
+                
+                <div class="space-y-2 mb-4 text-sm text-gray-600">
+                    <div class="flex items-center">
+                        <i class="fas fa-user ml-2 text-blue-600"></i>
+                        <span>${research.author}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-university ml-2 text-blue-600"></i>
+                        <span>${research.university || 'غير محدد'}</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas fa-calendar ml-2 text-blue-600"></i>
+                            <span>${research.year}</span>
+                        </div>
+                        <span class="bg-gray-100 px-2 py-1 rounded text-xs">${research.type}</span>
+                    </div>
+                </div>
+                
+                <p class="text-gray-700 text-sm mb-4 line-clamp-3">${research.abstract}</p>
+                
+                ${research.keywords ? `
+                    <div class="mb-4">
+                        <div class="flex flex-wrap gap-1">
+                            ${research.keywords.split(',').slice(0, 3).map(keyword => 
+                                `<span class="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs">${keyword.trim()}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div class="flex justify-between items-center pt-4 border-t border-gray-100">
+                    <div class="flex items-center text-sm text-gray-500">
+                        <i class="fas fa-download ml-1"></i>
+                        <span>${downloads} تحميل</span>
+                    </div>
+                    <div class="flex space-x-2 space-x-reverse">
+                        <button onclick="viewResearch('${research.id}')" class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700 transition-colors">
+                            <i class="fas fa-eye ml-1"></i>
+                            عرض
+                        </button>
+                        <button onclick="downloadResearch('${research.id}')" class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg text-sm hover:bg-gray-200 transition-colors">
+                            <i class="fas fa-download ml-1"></i>
+                            تحميل
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            return card;
+        }
+
+        function createUniversityCard(university) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg p-6 card-hover animate-fade-in';
+            
+            card.innerHTML = `
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-university text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">${university.name}</h3>
+                    <p class="text-gray-600 text-sm">${university.nameEn}</p>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600">المدينة:</span>
+                        <span class="font-medium">${university.city}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600">تأسست:</span>
+                        <span class="font-medium">${university.established}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-gray-600">البحوث:</span>
+                        <span class="font-medium text-blue-600">${university.researchCount}</span>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h4 class="font-medium text-gray-900 mb-3">الأقسام الهندسية:</h4>
+                    <div class="flex flex-wrap gap-2">
+                        ${university.departments.map(dept => 
+                            `<span class="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">${dept}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <button class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-external-link-alt ml-2"></i>
+                    زيارة الموقع
+                </button>
+            `;
+            
+            return card;
+        }
+
+        function createResearcherCard(researcher) {
+            const card = document.createElement('div');
+            card.className = 'bg-white rounded-xl shadow-lg p-6 card-hover animate-fade-in text-center';
+            
+            const researchCount = researcher.researchCount || 0;
+            
+            card.innerHTML = `
+                <div class="w-20 h-20 bg-gradient-to-br from-blue-600 to-amber-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-graduate text-white text-2xl"></i>
+                </div>
+                
+                <h3 class="text-lg font-bold text-gray-900 mb-2">${researcher.name}</h3>
+                <p class="text-blue-600 font-medium mb-1">${researcher.position || 'باحث'}</p>
+                <p class="text-gray-600 text-sm mb-4">${researcher.university}</p>
+                
+                <div class="space-y-2 mb-4 text-sm">
+                    <div class="bg-gray-50 rounded-lg p-2">
+                        <span class="text-gray-600">القسم: </span>
+                        <span class="font-medium">${researcher.department}</span>
+                    </div>
+                    <div class="bg-blue-50 rounded-lg p-2">
+                        <span class="text-blue-600">البحوث: </span>
+                        <span class="font-bold text-blue-800">${researchCount}</span>
+                    </div>
+                </div>
+                
+                <button onclick="viewResearcher('${researcher.email}')" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    <i class="fas fa-eye ml-2"></i>
+                    عرض الملف
+                </button>
+            `;
+            
+            return card;
+        }
+
+        // Research interaction functions
+        function viewResearch(researchId) {
+            database.ref('researches/' + researchId).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const research = snapshot.val();
+                    // Open research file in new tab
+                    if (research.fileUrl) {
+                        window.open(research.fileUrl, '_blank', 'noopener,noreferrer');
+                    } else {
+                        showMessage('add-research-error', 'ملف البحث غير متوفر', true);
+                    }
+                }
+            });
+        }
+
+        function downloadResearch(researchId) {
+            database.ref('researches/' + researchId).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    const research = snapshot.val();
+                    if (research.fileUrl) {
+                        // Increment download count
+                        const newDownloadCount = (research.downloads || 0) + 1;
+                        database.ref('researches/' + researchId + '/downloads').set(newDownloadCount);
+                        
+                        // Create download link
+                        const link = document.createElement('a');
+                        link.href = research.fileUrl;
+                        link.download = research.title + '.pdf';
+                        link.target = '_blank';
+                        link.rel = 'noopener noreferrer';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        // Refresh displays
+                        loadResearches();
+                        loadLatestResearches();
+                        updateStats();
+                    } else {
+                        showMessage('add-research-error', 'ملف البحث غير متوفر للتحميل', true);
+                    }
+                }
+            });
+        }
+
+        function viewResearcher(email) {
+            // Show researcher details (could be expanded to a modal)
+            showMessage('add-research-success', 'عرض تفاصيل الباحث: ' + email, false);
+        }
+
+        function performSearch(query) {
+            if (!query.trim()) return;
+            
+            // Show researches section
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById('researches').classList.remove('hidden');
+            
+            // Search in Firebase
+            database.ref('researches').once('value', (snapshot) => {
+                const filteredResearches = [];
+                snapshot.forEach((childSnapshot) => {
+                    const research = childSnapshot.val();
+                    const searchTerm = query.toLowerCase();
+                    
+                    if (research.title.toLowerCase().includes(searchTerm) || 
+                        research.author.toLowerCase().includes(searchTerm) || 
+                        research.department.toLowerCase().includes(searchTerm) ||
+                        (research.university && research.university.toLowerCase().includes(searchTerm)) ||
+                        (research.keywords && research.keywords.toLowerCase().includes(searchTerm)) ||
+                        research.abstract.toLowerCase().includes(searchTerm)) {
+                        filteredResearches.push(research);
+                    }
+                });
+                
+                displayResearches(filteredResearches);
+            });
+        }
+
+        // Initialize default stats for empty database
+        function initializeStats() {
+            document.getElementById('research-count').textContent = '0';
+            document.getElementById('university-count').textContent = '3';
+            document.getElementById('researcher-count').textContent = '0';
+            document.getElementById('download-count').textContent = '0';
+        }
+
+        // Add filter functionality
+        function setupFilters() {
+            const filterSelects = document.querySelectorAll('#researches select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', applyFilters);
+            });
+        }
+
+        function applyFilters() {
+            const universityFilter = document.querySelector('#researches select:nth-child(1)').value;
+            const departmentFilter = document.querySelector('#researches select:nth-child(2)').value;
+            const yearFilter = document.querySelector('#researches select:nth-child(3)').value;
+            const typeFilter = document.querySelector('#researches select:nth-child(4)').value;
+
+            database.ref('researches').once('value', (snapshot) => {
+                const filteredResearches = [];
+                snapshot.forEach((childSnapshot) => {
+                    const research = childSnapshot.val();
+                    
+                    if ((universityFilter === '' || universityFilter === 'جميع الجامعات' || research.university === universityFilter) &&
+                        (departmentFilter === '' || departmentFilter === 'جميع التخصصات' || research.department === departmentFilter) &&
+                        (yearFilter === '' || yearFilter === 'جميع السنوات' || research.year.toString() === yearFilter) &&
+                        (typeFilter === '' || typeFilter === 'جميع الأنواع' || research.type === typeFilter)) {
+                        filteredResearches.push(research);
+                    }
+                });
+                
+                displayResearches(filteredResearches);
+            });
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9908d50355bac530',t:'MTc2MDc5ODg1OS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
